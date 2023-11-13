@@ -1,5 +1,5 @@
 import 'package:forms_app/presentation/screens.dart';
-import 'package:forms_app/presentation/screens/bloc_counter.dart';
+import 'package:forms_app/presentation/screens/bloc_counter_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(routes: [

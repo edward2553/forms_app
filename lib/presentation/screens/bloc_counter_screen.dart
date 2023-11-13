@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:forms_app/presentation/blocs/counter_bloc/counter_bloc.dart';
 import 'package:forms_app/presentation/blocs/counter_cubit/counter_cubit.dart';
 
 class BlockCounterScreen extends StatelessWidget {
@@ -8,7 +9,7 @@ class BlockCounterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => CounterCubit(), child: const _BlockCounterView());
+        create: (_) => CounterBloc(), child: const _BlockCounterView());
   }
 }
 
@@ -22,7 +23,9 @@ class _BlockCounterView extends StatelessWidget {
   );
 
   void increaseBy(BuildContext context, [int value = 1]) {
-    context.read<CounterCubit>().increaseBy(value);
+    // context.read<CounterBloc>()
+    //   .add(CounterIncreasedEvent(value));
+    context.read<CounterBloc>().increaseBy(value);
   }
 
   @override
@@ -34,28 +37,24 @@ class _BlockCounterView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         // title:  Text('Cubit Counter: ${counterState.transactionCount}')
-        title: context.select((CounterCubit value) {
-          return Text('Bloc Counter: ${value.state.transactionCount}');
+        title: context.select((CounterBloc bloc) {
+          return Text('Bloc Counter: ${bloc.state.transactionCount}');
         }),
         actions: [
           IconButton(
             onPressed: () => {
-              context.read<CounterCubit>().reset()
+              context.read<CounterBloc>().resetCounter()
             },
             icon: const Icon(Icons.refresh_outlined),
           )
         ],
       ),
       body: Center(
-        child: BlocBuilder<CounterCubit, CounterState>(
-          builder: (context, state) {
-            print('El counter cambió');
-            return Text(
-              'Counter value: ${ state.counter }',
+        child: context.select((CounterBloc counterBloc) =>
+          Text(
+              'Counter value: ${ counterBloc.state.counter }',
               style: textStyle,
-            );
-          },
-        ),
+          ))
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
